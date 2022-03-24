@@ -113,10 +113,14 @@ PS.touch = function( x, y, data, options ) {
     if (PS.color(x,y) === PS.COLOR_BLACK) {
         PS.color(x, y, colors[num]); // set color to black
         PS.audioPlay("fx_blip");
+        if (PS.color(PS.ALL, PS.ALL) !== PS.COLOR_BLACK) {
+            PS.audioPlay("fx_tada");
+            PS.color(PS.ALL, PS.ALL,PS.COLOR_BLACK);
+        }
     }
     else {
         PS.color(x, y, PS.COLOR_BLACK);
-        PS.audioPlay("fx_tada");
+
     }
 
 };
