@@ -67,60 +67,64 @@ PS.init = function( system, options ) {
 
     PS.gridSize( 8, 8 );
 
+    //Initialize colors
+    let PINK = PS.makeRGB(252, 217, 207);
+    let PURPLE = PS.makeRGB(218, 189, 246);
+    let YELLOW = PS.makeRGB(255, 242, 198);
+    let BLUE = PS.makeRGB(168, 222, 250);
+    let GREEN = PS.makeRGB(168, 250, 214);
+    let colors = [PINK, PURPLE, YELLOW, BLUE, GREEN]
+    let colorNum = Math.floor((Math.random() * 5) );
+
+    let xNum = Math.floor((Math.random() * 8) );
+    let yNum = Math.floor((Math.random() * 8) );
+
+
+
     // Set background color to yellow -- CHANGE LATER
     PS.gridColor( PS.COLOR_GRAY );
 
     PS.data(PS.ALL, PS.ALL, PS.COLOR_BLACK);	//set data to black
     PS.color(PS.ALL, PS.ALL, PS.COLOR_BLACK); // set color to black
     PS.borderColor(PS.ALL, PS.ALL, PS.COLOR_BLACK); //set border color to black
-	// This is also a good place to display
-	// your game title or a welcome message
-	// in the status line above the grid.
-	// Uncomment the following code line and
-	// change the string parameter as needed.
+
+    PS.color(xNum, yNum, colors[colorNum]);
+
 
 	 PS.statusText( "Game" );
 
-	// Add any other initialization code you need here.
 };
 
-/*
-PS.touch ( x, y, data, options )
-Called when the left mouse button is clicked over bead(x, y), or when bead(x, y) is touched.
-This function doesn't have to do anything. Any value returned is ignored.
-[x : Number] = zero-based x-position (column) of the bead on the grid.
-[y : Number] = zero-based y-position (row) of the bead on the grid.
-[data : *] = The JavaScript value previously associated with bead(x, y) using PS.data(); default = 0.
-[options : Object] = A JavaScript object with optional data properties; see API documentation for details.
-*/
 
 PS.touch = function( x, y, data, options ) {
 	// Uncomment the following code line
 	// to inspect x/y parameters:
 
+
+
+    // PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
+
+	// Add code here for mouse clicks/touches
+	// over a bead.
     let PINK = PS.makeRGB(252, 217, 207);
     let PURPLE = PS.makeRGB(218, 189, 246);
     let YELLOW = PS.makeRGB(255, 242, 198);
     let BLUE = PS.makeRGB(168, 222, 250);
     let GREEN = PS.makeRGB(168, 250, 214);
-
     let colors = [PINK, PURPLE, YELLOW, BLUE, GREEN]
-    // PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
 
-	// Add code here for mouse clicks/touches
-	// over a bead.
-    let num = Math.floor((Math.random() * 5) );
+    let colorNum = Math.floor((Math.random() * 5) );
+
     if (PS.color(x,y) === PS.COLOR_BLACK) {
-        PS.color(x, y, colors[num]); // set color to black
-        PS.audioPlay("fx_blip");
-        if (PS.color(PS.ALL, PS.ALL) !== PS.COLOR_BLACK) {
-            PS.audioPlay("fx_tada");
-            PS.color(PS.ALL, PS.ALL,PS.COLOR_BLACK);
-        }
+        PS.audioPlay("fx_bloink");
+
     }
     else {
         PS.color(x, y, PS.COLOR_BLACK);
-
+        let xNum = Math.floor((Math.random() * 8) );
+        let yNum = Math.floor((Math.random() * 8) );
+        PS.color(xNum, yNum, colors[colorNum]);
+        PS.audioPlay("fx_blip");
     }
 
 };
