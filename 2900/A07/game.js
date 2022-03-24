@@ -38,6 +38,7 @@ If you don't use JSHint (or are using it with a configuration file), you can saf
 
 "use strict"; // Do NOT remove this directive!
 
+
 /*
 PS.init( system, options )
 Called once after engine is initialized but before event-polling begins.
@@ -64,15 +65,21 @@ PS.init = function( system, options ) {
 	// Uncomment the following code line and change
 	// the x and y parameters as needed.
 
-	// PS.gridSize( 8, 8 );
+    PS.gridSize( 8, 8 );
 
+    // Set background color to yellow -- CHANGE LATER
+    PS.gridColor( PS.COLOR_GRAY );
+
+    PS.data(PS.ALL, PS.ALL, PS.COLOR_BLACK);	//set data to black
+    PS.color(PS.ALL, PS.ALL, PS.COLOR_BLACK); // set color to black
+    PS.borderColor(PS.ALL, PS.ALL, PS.COLOR_BLACK); //set border color to black
 	// This is also a good place to display
 	// your game title or a welcome message
 	// in the status line above the grid.
 	// Uncomment the following code line and
 	// change the string parameter as needed.
 
-	// PS.statusText( "Game" );
+	 PS.statusText( "Game" );
 
 	// Add any other initialization code you need here.
 };
@@ -91,10 +98,22 @@ PS.touch = function( x, y, data, options ) {
 	// Uncomment the following code line
 	// to inspect x/y parameters:
 
-	// PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
+    let PINK = PS.makeRGB(252, 217, 207);
+    let PURPLE = PS.makeRGB(218, 189, 246);
+    let YELLOW = PS.makeRGB(255, 242, 198);
+    let BLUE = PS.makeRGB(168, 222, 250);
+    let GREEN = PS.makeRGB(168, 250, 214);
+
+    let colors = [PINK, PURPLE, YELLOW, BLUE, GREEN]
+    // PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
 
 	// Add code here for mouse clicks/touches
 	// over a bead.
+    let num = Math.floor((Math.random() * 5) );
+
+    PS.color(x, y, colors[num]); // set color to black
+
+
 };
 
 /*
