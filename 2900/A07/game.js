@@ -110,9 +110,14 @@ PS.touch = function( x, y, data, options ) {
 	// Add code here for mouse clicks/touches
 	// over a bead.
     let num = Math.floor((Math.random() * 5) );
-
-    PS.color(x, y, colors[num]); // set color to black
-
+    if (PS.color(x,y) === PS.COLOR_BLACK) {
+        PS.color(x, y, colors[num]); // set color to black
+        PS.audioPlay("fx_blip");
+    }
+    else {
+        PS.color(x, y, PS.COLOR_BLACK);
+        PS.audioPlay("fx_tada");
+    }
 
 };
 
