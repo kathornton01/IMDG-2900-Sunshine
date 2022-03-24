@@ -65,7 +65,7 @@ PS.init = function( system, options ) {
 	// Uncomment the following code line and change
 	// the x and y parameters as needed.
 
-    PS.gridSize( 8, 8 );
+    PS.gridSize( 15, 15 );
 
     //Initialize colors
     let PINK = PS.makeRGB(252, 217, 207);
@@ -82,16 +82,17 @@ PS.init = function( system, options ) {
 
 
     // Set background color to yellow -- CHANGE LATER
-    PS.gridColor( PS.COLOR_GRAY );
+    PS.gridColor( PS.COLOR_GRAY_DARK );
 
-    PS.data(PS.ALL, PS.ALL, PS.COLOR_BLACK);	//set data to black
-    PS.color(PS.ALL, PS.ALL, PS.COLOR_BLACK); // set color to black
-    PS.borderColor(PS.ALL, PS.ALL, PS.COLOR_BLACK); //set border color to black
+    PS.data(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK);	//set data to_GRAY_DARK
+    PS.color(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK); // set color to_GRAY_DARK
+    PS.borderColor(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK); //set border color to_GRAY_DARK
 
     PS.color(xNum, yNum, colors[colorNum]);
 
 
-	 PS.statusText( "Game" );
+    PS.statusText( " " ); //so there won't be any text (if deleted, it changes to default "perlenspiel"
+    PS.statusColor(PS.COLOR_WHITE);
 
 };
 
@@ -115,12 +116,12 @@ PS.touch = function( x, y, data, options ) {
 
     let colorNum = Math.floor((Math.random() * 5) );
 
-    if (PS.color(x,y) === PS.COLOR_BLACK) {
+    if (PS.color(x,y) === PS.COLOR_GRAY_DARK) {
         PS.audioPlay("fx_bloink");
 
     }
     else {
-        PS.color(x, y, PS.COLOR_BLACK);
+        PS.color(x, y, PS.COLOR_GRAY_DARK);
         let xNum = Math.floor((Math.random() * 8) );
         let yNum = Math.floor((Math.random() * 8) );
         PS.color(xNum, yNum, colors[colorNum]);
