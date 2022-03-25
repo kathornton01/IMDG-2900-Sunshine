@@ -122,8 +122,8 @@ PS.touch = function( x, y, data, options ) {
     }
     else {
         PS.color(x, y, PS.COLOR_GRAY_DARK);
-        let xNum = Math.floor((Math.random() * 8) );
-        let yNum = Math.floor((Math.random() * 8) );
+        let xNum = Math.floor((Math.random() * 15) );
+        let yNum = Math.floor((Math.random() * 15) );
         PS.color(xNum, yNum, colors[colorNum]);
         num += 1;
         PS.statusText(num)
