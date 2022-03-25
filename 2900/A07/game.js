@@ -48,6 +48,7 @@ Any value returned is ignored.
 [system : Object] = A JavaScript object containing engine and host platform information properties; see API documentation for details.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
+let num;
 
 PS.init = function( system, options ) {
 	// Uncomment the following code line
@@ -76,11 +77,10 @@ PS.init = function( system, options ) {
     let colors = [PINK, PURPLE, YELLOW, BLUE, GREEN]
     let colorNum = Math.floor((Math.random() * 5) );
 
-    let xNum = Math.floor((Math.random() * 8) );
-    let yNum = Math.floor((Math.random() * 8) );
+    let xNum = Math.floor((Math.random() * 15) );
+    let yNum = Math.floor((Math.random() * 15) );
 
-
-
+    num = 0;
     // Set background color to yellow -- CHANGE LATER
     PS.gridColor( PS.COLOR_GRAY_DARK );
 
@@ -91,7 +91,7 @@ PS.init = function( system, options ) {
     PS.color(xNum, yNum, colors[colorNum]);
 
 
-    PS.statusText( " " ); //so there won't be any text (if deleted, it changes to default "perlenspiel"
+    PS.statusText( num ); //so there won't be any text (if deleted, it changes to default "perlenspiel"
     PS.statusColor(PS.COLOR_WHITE);
 
 };
@@ -125,7 +125,14 @@ PS.touch = function( x, y, data, options ) {
         let xNum = Math.floor((Math.random() * 8) );
         let yNum = Math.floor((Math.random() * 8) );
         PS.color(xNum, yNum, colors[colorNum]);
-        PS.audioPlay("fx_blip");
+        num += 1;
+        PS.statusText(num)
+        if (num === 100 ) {
+            PS.audioPlay("fx_tada");
+        }
+        else {
+            PS.audioPlay("fx_blip");
+        }
     }
 
 };
