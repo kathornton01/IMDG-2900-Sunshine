@@ -49,6 +49,12 @@ Any value returned is ignored.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
 let num;
+let PINK = PS.makeRGB(252, 217, 207);
+let PURPLE = PS.makeRGB(218, 189, 246);
+let YELLOW = PS.makeRGB(255, 242, 198);
+let BLUE = PS.makeRGB(168, 222, 250);
+let GREEN = PS.makeRGB(168, 250, 214);
+let colors = [PINK, PURPLE, YELLOW, BLUE, GREEN]
 
 PS.init = function( system, options ) {
 	// Uncomment the following code line
@@ -69,17 +75,12 @@ PS.init = function( system, options ) {
     PS.gridSize( 15, 15 );
 
     //Initialize colors
-    let PINK = PS.makeRGB(252, 217, 207);
-    let PURPLE = PS.makeRGB(218, 189, 246);
-    let YELLOW = PS.makeRGB(255, 242, 198);
-    let BLUE = PS.makeRGB(168, 222, 250);
-    let GREEN = PS.makeRGB(168, 250, 214);
-    let colors = [PINK, PURPLE, YELLOW, BLUE, GREEN]
+
     let colorNum = Math.floor((Math.random() * 5) );
 
     let xNum = Math.floor((Math.random() * 15) );
     let yNum = Math.floor((Math.random() * 15) );
-
+    let scaleNum = 50 + Math.floor((Math.random() * 50) + 1);
     num = 0;
     // Set background color to yellow -- CHANGE LATER
     PS.gridColor( PS.COLOR_GRAY_DARK );
@@ -87,11 +88,11 @@ PS.init = function( system, options ) {
     PS.data(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK);	//set data to_GRAY_DARK
     PS.color(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK); // set color to_GRAY_DARK
     PS.borderColor(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK); //set border color to_GRAY_DARK
-
+    PS.scale ( xNum, yNum, scaleNum );
     PS.color(xNum, yNum, colors[colorNum]);
 
 
-    PS.statusText( num ); //so there won't be any text (if deleted, it changes to default "perlenspiel"
+    PS.statusText( num ); //count of numbers clicked
     PS.statusColor(PS.COLOR_WHITE);
 
 };
@@ -107,14 +108,10 @@ PS.touch = function( x, y, data, options ) {
 
 	// Add code here for mouse clicks/touches
 	// over a bead.
-    let PINK = PS.makeRGB(252, 217, 207);
-    let PURPLE = PS.makeRGB(218, 189, 246);
-    let YELLOW = PS.makeRGB(255, 242, 198);
-    let BLUE = PS.makeRGB(168, 222, 250);
-    let GREEN = PS.makeRGB(168, 250, 214);
-    let colors = [PINK, PURPLE, YELLOW, BLUE, GREEN]
 
     let colorNum = Math.floor((Math.random() * 5) );
+    let goodNoise = ["fx_blip", "fx_pop", "fx_coin1", "fx_coin3", "fx_coin6"]
+    let audioNum = Math.floor((Math.random() * 5) );
 
     if (PS.color(x,y) === PS.COLOR_GRAY_DARK) {
         PS.audioPlay("fx_bloink");
@@ -124,14 +121,18 @@ PS.touch = function( x, y, data, options ) {
         PS.color(x, y, PS.COLOR_GRAY_DARK);
         let xNum = Math.floor((Math.random() * 15) );
         let yNum = Math.floor((Math.random() * 15) );
+        let scaleNum = 50 + Math.floor((Math.random() * 50) + 1);
+        PS.scale ( xNum, yNum, scaleNum );
+        //PS.debug(scaleNum);
         PS.color(xNum, yNum, colors[colorNum]);
         num += 1;
-        PS.statusText(num)
-        if (num === 100 ) {
+        PS.statusText(num);
+        if (num % 100 === 0 ) {
             PS.audioPlay("fx_tada");
         }
         else {
-            PS.audioPlay("fx_blip");
+            PS.audioPlay(goodNoise[audioNum]);
+            //PS.debug(audioNum);
         }
     }
 
