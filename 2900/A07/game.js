@@ -49,13 +49,18 @@ Any value returned is ignored.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
 let num;
-let PINK = PS.makeRGB(252, 217, 207);
+let PINK = PS.makeRGB( 247, 181, 230); //old color: 252, 217, 207);
 let PURPLE = PS.makeRGB(218, 189, 246);
 let YELLOW = PS.makeRGB(255, 242, 198);
 let BLUE = PS.makeRGB(168, 222, 250);
 let GREEN = PS.makeRGB(168, 250, 214);
-let colors = [PINK, PURPLE, YELLOW, BLUE, GREEN]
-
+let ORANGE = PS.makeRGB(255, 179, 140);
+//let WHITE = PS.makeRGB(243, 243, 252);
+let BACKGROUND_PINK = PS.makeRGB(254, 238, 234);
+let BACKGROUND_GRAY = PS.COLOR_GRAY_DARK;
+let background = BACKGROUND_PINK;
+let colors = [PINK, PURPLE, BLUE, GREEN, ORANGE]
+let size = 14;
 PS.init = function( system, options ) {
 	// Uncomment the following code line
 	// to verify operation:
@@ -72,31 +77,32 @@ PS.init = function( system, options ) {
 	// Uncomment the following code line and change
 	// the x and y parameters as needed.
 
-    PS.gridSize( 15, 15 );
+    PS.gridSize( size, size );
 
     //Initialize colors
 
-    let colorNum = Math.floor((Math.random() * 5) );
+    let colorNum = Math.floor((Math.random() * colors.length) );
 
-    let xNum = Math.floor((Math.random() * 15) );
-    let yNum = Math.floor((Math.random() * 15) );
+    let xNum = Math.floor((Math.random() * size) );
+    let yNum = Math.floor((Math.random() * size) );
     let scaleNum = 50 + Math.floor((Math.random() * 50) + 1);
     let radNum = Math.floor(Math.random() * 51);
-    PS.debug(radNum)
     num = 0;
-    // Set background color to gray
-    PS.gridColor( PS.COLOR_GRAY_DARK );
+    // Set background color to defined above
+    PS.gridColor( background );
+    PS.gridColor( background );
 
-    PS.data(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK);	//set data to gray
-    PS.color(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK); // set color to gray
-    PS.borderColor(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK); //set border color to  to gray
+
+    PS.data(PS.ALL, PS.ALL, background);	//set data to background color
+    PS.color(PS.ALL, PS.ALL, background); // set color to background color
+    PS.borderColor(PS.ALL, PS.ALL, background); //set border color to background color
     PS.scale ( xNum, yNum, scaleNum );
     PS.radius ( xNum, yNum, radNum );
     PS.color(xNum, yNum, colors[colorNum]);
 
 
     PS.statusText( num ); //count of numbers clicked
-    PS.statusColor(PS.COLOR_WHITE);
+    PS.statusColor(PINK);
 
 };
 
@@ -112,18 +118,16 @@ PS.touch = function( x, y, data, options ) {
 	// Add code here for mouse clicks/touches
 	// over a bead.
 
-    let colorNum = Math.floor((Math.random() * 5) );
+    let colorNum = Math.floor((Math.random() * colors.length) );
     let goodNoise = ["fx_blip", "fx_pop", "fx_coin1", "fx_coin3", "fx_coin6"]
-    let audioNum = Math.floor((Math.random() * 5) );
-
-    if (PS.color(x,y) === PS.COLOR_GRAY_DARK) {
+    let audioNum = Math.floor((Math.random() * goodNoise.length) );
+    if (PS.color(x,y) === background) {
         PS.audioPlay("fx_bloink");
-
     }
     else {
-        PS.color(x, y, PS.COLOR_GRAY_DARK);
-        let xNum = Math.floor((Math.random() * 15) );
-        let yNum = Math.floor((Math.random() * 15) );
+        PS.color(x, y, background);
+        let xNum = Math.floor((Math.random() * size) );
+        let yNum = Math.floor((Math.random() * size) );
         let scaleNum = 50 + Math.floor((Math.random() * 50) + 1);
         PS.scale ( xNum, yNum, scaleNum );
         let radNum = Math.floor(Math.random() * 51);
