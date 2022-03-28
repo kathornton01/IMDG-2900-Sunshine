@@ -49,99 +49,89 @@ Any value returned is ignored.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
 let num;
-let PINK = PS.makeRGB( 247, 181, 230); //old color: 252, 217, 207);
-let PURPLE = PS.makeRGB(218, 189, 246);
-let YELLOW = PS.makeRGB(255, 242, 198);
-let BLUE = PS.makeRGB(168, 222, 250);
-let GREEN = PS.makeRGB(168, 250, 214);
-let ORANGE = PS.makeRGB(255, 179, 140);
-//let WHITE = PS.makeRGB(243, 243, 252);
-let BACKGROUND_PINK = PS.makeRGB(254, 238, 234);
-let BACKGROUND_GRAY = PS.COLOR_GRAY_DARK;
-let background = BACKGROUND_PINK;
-let colors = [PINK, PURPLE, BLUE, GREEN, ORANGE]
-let size = 14;
+
 PS.init = function( system, options ) {
-	// Uncomment the following code line
-	// to verify operation:
+    // Uncomment the following code line
+    // to verify operation:
 
-	// PS.debug( "PS.init() called\n" );
+    // PS.debug( "PS.init() called\n" );
 
-	// This function should normally begin
-	// with a call to PS.gridSize( x, y )
-	// where x and y are the desired initial
-	// dimensions of the grid.
-	// Call PS.gridSize() FIRST to avoid problems!
-	// The sample call below sets the grid to the
-	// default dimensions (8 x 8).
-	// Uncomment the following code line and change
-	// the x and y parameters as needed.
+    // This function should normally begin
+    // with a call to PS.gridSize( x, y )
+    // where x and y are the desired initial
+    // dimensions of the grid.
+    // Call PS.gridSize() FIRST to avoid problems!
+    // The sample call below sets the grid to the
+    // default dimensions (8 x 8).
+    // Uncomment the following code line and change
+    // the x and y parameters as needed.
 
-    PS.gridSize( size, size );
+    PS.gridSize( 15, 15 );
 
     //Initialize colors
+    let PINK = PS.makeRGB(252, 217, 207);
+    let PURPLE = PS.makeRGB(218, 189, 246);
+    let YELLOW = PS.makeRGB(255, 242, 198);
+    let BLUE = PS.makeRGB(168, 222, 250);
+    let GREEN = PS.makeRGB(168, 250, 214);
+    let colors = [PINK, PURPLE, YELLOW, BLUE, GREEN]
+    let colorNum = Math.floor((Math.random() * 5) );
 
-    let colorNum = Math.floor((Math.random() * colors.length) );
+    let xNum = Math.floor((Math.random() * 15) );
+    let yNum = Math.floor((Math.random() * 15) );
 
-    let xNum = Math.floor((Math.random() * size) );
-    let yNum = Math.floor((Math.random() * size) );
-    let scaleNum = 50 + Math.floor((Math.random() * 50) + 1);
-    let radNum = Math.floor(Math.random() * 51);
     num = 0;
-    // Set background color to defined above
-    PS.gridColor( background );
-    PS.gridColor( background );
+    // Set background color to yellow -- CHANGE LATER
+    PS.gridColor( PS.COLOR_GRAY_DARK );
 
+    PS.data(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK);	//set data to_GRAY_DARK
+    PS.color(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK); // set color to_GRAY_DARK
+    PS.borderColor(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK); //set border color to_GRAY_DARK
 
-    PS.data(PS.ALL, PS.ALL, background);	//set data to background color
-    PS.color(PS.ALL, PS.ALL, background); // set color to background color
-    PS.borderColor(PS.ALL, PS.ALL, background); //set border color to background color
-    PS.scale ( xNum, yNum, scaleNum );
-    PS.radius ( xNum, yNum, radNum );
     PS.color(xNum, yNum, colors[colorNum]);
 
 
-    PS.statusText( num ); //count of numbers clicked
-    PS.statusColor(PINK);
+    PS.statusText( num ); //so there won't be any text (if deleted, it changes to default "perlenspiel"
+    PS.statusColor(PS.COLOR_WHITE);
 
 };
 
 
 PS.touch = function( x, y, data, options ) {
-	// Uncomment the following code line
-	// to inspect x/y parameters:
+    // Uncomment the following code line
+    // to inspect x/y parameters:
 
 
 
     // PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
 
-	// Add code here for mouse clicks/touches
-	// over a bead.
+    // Add code here for mouse clicks/touches
+    // over a bead.
+    let PINK = PS.makeRGB(252, 217, 207);
+    let PURPLE = PS.makeRGB(218, 189, 246);
+    let YELLOW = PS.makeRGB(255, 242, 198);
+    let BLUE = PS.makeRGB(168, 222, 250);
+    let GREEN = PS.makeRGB(168, 250, 214);
+    let colors = [PINK, PURPLE, YELLOW, BLUE, GREEN]
 
-    let colorNum = Math.floor((Math.random() * colors.length) );
-    let goodNoise = ["fx_blip", "fx_pop", "fx_coin1", "fx_coin3", "fx_coin6"]
-    let audioNum = Math.floor((Math.random() * goodNoise.length) );
-    if (PS.color(x,y) === background) {
+    let colorNum = Math.floor((Math.random() * 5) );
+
+    if (PS.color(x,y) === PS.COLOR_GRAY_DARK) {
         PS.audioPlay("fx_bloink");
+
     }
     else {
-        PS.color(x, y, background);
-        let xNum = Math.floor((Math.random() * size) );
-        let yNum = Math.floor((Math.random() * size) );
-        let scaleNum = 50 + Math.floor((Math.random() * 50) + 1);
-        PS.scale ( xNum, yNum, scaleNum );
-        let radNum = Math.floor(Math.random() * 51);
-        PS.radius( xNum, yNum, radNum );
-
+        PS.color(x, y, PS.COLOR_GRAY_DARK);
+        let xNum = Math.floor((Math.random() * 15) );
+        let yNum = Math.floor((Math.random() * 15) );
         PS.color(xNum, yNum, colors[colorNum]);
         num += 1;
-        PS.statusText(num);
-        if (num % 100 === 0 ) {
+        PS.statusText(num)
+        if (num === 100 ) {
             PS.audioPlay("fx_tada");
         }
         else {
-            PS.audioPlay(goodNoise[audioNum]);
-            //PS.debug(audioNum);
+            PS.audioPlay("fx_blip");
         }
     }
 
@@ -158,11 +148,11 @@ This function doesn't have to do anything. Any value returned is ignored.
 */
 
 PS.release = function( x, y, data, options ) {
-	// Uncomment the following code line to inspect x/y parameters:
+    // Uncomment the following code line to inspect x/y parameters:
 
-	// PS.debug( "PS.release() @ " + x + ", " + y + "\n" );
+    // PS.debug( "PS.release() @ " + x + ", " + y + "\n" );
 
-	// Add code here for when the mouse button/touch is released over a bead.
+    // Add code here for when the mouse button/touch is released over a bead.
 };
 
 /*
@@ -176,11 +166,11 @@ This function doesn't have to do anything. Any value returned is ignored.
 */
 
 PS.enter = function( x, y, data, options ) {
-	// Uncomment the following code line to inspect x/y parameters:
+    // Uncomment the following code line to inspect x/y parameters:
 
-	// PS.debug( "PS.enter() @ " + x + ", " + y + "\n" );
+    // PS.debug( "PS.enter() @ " + x + ", " + y + "\n" );
 
-	// Add code here for when the mouse cursor/touch enters a bead.
+    // Add code here for when the mouse cursor/touch enters a bead.
 };
 
 /*
@@ -194,11 +184,11 @@ This function doesn't have to do anything. Any value returned is ignored.
 */
 
 PS.exit = function( x, y, data, options ) {
-	// Uncomment the following code line to inspect x/y parameters:
+    // Uncomment the following code line to inspect x/y parameters:
 
-	// PS.debug( "PS.exit() @ " + x + ", " + y + "\n" );
+    // PS.debug( "PS.exit() @ " + x + ", " + y + "\n" );
 
-	// Add code here for when the mouse cursor/touch exits a bead.
+    // Add code here for when the mouse cursor/touch exits a bead.
 };
 
 /*
@@ -209,11 +199,11 @@ This function doesn't have to do anything. Any value returned is ignored.
 */
 
 PS.exitGrid = function( options ) {
-	// Uncomment the following code line to verify operation:
+    // Uncomment the following code line to verify operation:
 
-	// PS.debug( "PS.exitGrid() called\n" );
+    // PS.debug( "PS.exitGrid() called\n" );
 
-	// Add code here for when the mouse cursor/touch moves off the grid.
+    // Add code here for when the mouse cursor/touch moves off the grid.
 };
 
 /*
@@ -227,11 +217,11 @@ This function doesn't have to do anything. Any value returned is ignored.
 */
 
 PS.keyDown = function( key, shift, ctrl, options ) {
-	// Uncomment the following code line to inspect first three parameters:
+    // Uncomment the following code line to inspect first three parameters:
 
-	// PS.debug( "PS.keyDown(): key=" + key + ", shift=" + shift + ", ctrl=" + ctrl + "\n" );
+    // PS.debug( "PS.keyDown(): key=" + key + ", shift=" + shift + ", ctrl=" + ctrl + "\n" );
 
-	// Add code here for when a key is pressed.
+    // Add code here for when a key is pressed.
 };
 
 /*
@@ -245,11 +235,11 @@ This function doesn't have to do anything. Any value returned is ignored.
 */
 
 PS.keyUp = function( key, shift, ctrl, options ) {
-	// Uncomment the following code line to inspect first three parameters:
+    // Uncomment the following code line to inspect first three parameters:
 
-	// PS.debug( "PS.keyUp(): key=" + key + ", shift=" + shift + ", ctrl=" + ctrl + "\n" );
+    // PS.debug( "PS.keyUp(): key=" + key + ", shift=" + shift + ", ctrl=" + ctrl + "\n" );
 
-	// Add code here for when a key is released.
+    // Add code here for when a key is released.
 };
 
 /*
@@ -262,7 +252,7 @@ NOTE: Currently, only mouse wheel events are reported, and only when the mouse c
 */
 
 PS.input = function( sensors, options ) {
-	// Uncomment the following code lines to inspect first parameter:
+    // Uncomment the following code lines to inspect first parameter:
 
 //	 var device = sensors.wheel; // check for scroll wheel
 //
@@ -270,6 +260,6 @@ PS.input = function( sensors, options ) {
 //	   PS.debug( "PS.input(): " + device + "\n" );
 //	 }
 
-	// Add code here for when an input event is detected.
+    // Add code here for when an input event is detected.
 };
 
