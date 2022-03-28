@@ -81,14 +81,17 @@ PS.init = function( system, options ) {
     let xNum = Math.floor((Math.random() * 15) );
     let yNum = Math.floor((Math.random() * 15) );
     let scaleNum = 50 + Math.floor((Math.random() * 50) + 1);
+    let radNum = Math.floor(Math.random() * 51);
+    PS.debug(radNum)
     num = 0;
-    // Set background color to yellow -- CHANGE LATER
+    // Set background color to gray
     PS.gridColor( PS.COLOR_GRAY_DARK );
 
-    PS.data(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK);	//set data to_GRAY_DARK
-    PS.color(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK); // set color to_GRAY_DARK
-    PS.borderColor(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK); //set border color to_GRAY_DARK
+    PS.data(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK);	//set data to gray
+    PS.color(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK); // set color to gray
+    PS.borderColor(PS.ALL, PS.ALL, PS.COLOR_GRAY_DARK); //set border color to  to gray
     PS.scale ( xNum, yNum, scaleNum );
+    PS.radius ( xNum, yNum, radNum );
     PS.color(xNum, yNum, colors[colorNum]);
 
 
@@ -123,7 +126,9 @@ PS.touch = function( x, y, data, options ) {
         let yNum = Math.floor((Math.random() * 15) );
         let scaleNum = 50 + Math.floor((Math.random() * 50) + 1);
         PS.scale ( xNum, yNum, scaleNum );
-        //PS.debug(scaleNum);
+        let radNum = Math.floor(Math.random() * 51);
+        PS.radius( xNum, yNum, radNum );
+
         PS.color(xNum, yNum, colors[colorNum]);
         num += 1;
         PS.statusText(num);
