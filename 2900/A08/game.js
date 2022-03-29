@@ -38,20 +38,11 @@ If you don't use JSHint (or are using it with a configuration file), you can saf
 
 "use strict"; // Do NOT remove this directive!
 
-
-/*
-PS.init( system, options )
-Called once after engine is initialized but before event-polling begins.
-This function doesn't have to do anything, although initializing the grid dimensions with PS.gridSize() is recommended.
-If PS.grid() is not called, the default grid dimensions (8 x 8 beads) are applied.
-Any value returned is ignored.
-[system : Object] = A JavaScript object containing engine and host platform information properties; see API documentation for details.
-[options : Object] = A JavaScript object with optional data properties; see API documentation for details.
-*/
 let num;
 let PINK = PS.makeRGB( 247, 181, 230); //old color: 252, 217, 207);
 let PURPLE = PS.makeRGB(218, 189, 246);
-let YELLOW = PS.makeRGB(255, 242, 198);
+let RED = PS.makeRGB(254, 111, 94);
+let YELLOW = PS.makeRGB(253, 253, 125);
 let BLUE = PS.makeRGB(168, 222, 250);
 let GREEN = PS.makeRGB(168, 250, 214);
 let ORANGE = PS.makeRGB(255, 179, 140);
@@ -59,23 +50,9 @@ let ORANGE = PS.makeRGB(255, 179, 140);
 let BACKGROUND_PINK = PS.makeRGB(254, 238, 234);
 let BACKGROUND_GRAY = PS.COLOR_GRAY_DARK;
 let background = BACKGROUND_PINK;
-let colors = [PINK, PURPLE, BLUE, GREEN, ORANGE]
+let colors = [RED, PINK, PURPLE, YELLOW, BLUE, GREEN, ORANGE]
 let size = 14;
 PS.init = function( system, options ) {
-    // Uncomment the following code line
-    // to verify operation:
-
-    // PS.debug( "PS.init() called\n" );
-
-    // This function should normally begin
-    // with a call to PS.gridSize( x, y )
-    // where x and y are the desired initial
-    // dimensions of the grid.
-    // Call PS.gridSize() FIRST to avoid problems!
-    // The sample call below sets the grid to the
-    // default dimensions (8 x 8).
-    // Uncomment the following code line and change
-    // the x and y parameters as needed.
 
     PS.gridSize( size, size );
 
@@ -108,15 +85,6 @@ PS.init = function( system, options ) {
 
 
 PS.touch = function( x, y, data, options ) {
-    // Uncomment the following code line
-    // to inspect x/y parameters:
-
-
-
-    // PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
-
-    // Add code here for mouse clicks/touches
-    // over a bead.
 
     let colorNum = Math.floor((Math.random() * colors.length) );
     let goodNoise = ["fx_blip", "fx_pop", "fx_coin1", "fx_coin3", "fx_coin6"]
@@ -126,10 +94,6 @@ PS.touch = function( x, y, data, options ) {
     }
     else {
         PS.fade( x, y, 30 );
-
-        // additional init code goes here
-// onEnd function for end-of-fade report
-
         PS.color(x, y, background);
         let xNum = Math.floor((Math.random() * size) );
         let yNum = Math.floor((Math.random() * size) );
@@ -153,15 +117,7 @@ PS.touch = function( x, y, data, options ) {
 };
 
 
-/*
-PS.release ( x, y, data, options )
-Called when the left mouse button is released, or when a touch is lifted, over bead(x, y).
-This function doesn't have to do anything. Any value returned is ignored.
-[x : Number] = zero-based x-position (column) of the bead on the grid.
-[y : Number] = zero-based y-position (row) of the bead on the grid.
-[data : *] = The JavaScript value previously associated with bead(x, y) using PS.data(); default = 0.
-[options : Object] = A JavaScript object with optional data properties; see API documentation for details.
-*/
+
 
 PS.release = function( x, y, data, options ) {
     // Uncomment the following code line to inspect x/y parameters:
@@ -171,15 +127,7 @@ PS.release = function( x, y, data, options ) {
     // Add code here for when the mouse button/touch is released over a bead.
 };
 
-/*
-PS.enter ( x, y, button, data, options )
-Called when the mouse cursor/touch enters bead(x, y).
-This function doesn't have to do anything. Any value returned is ignored.
-[x : Number] = zero-based x-position (column) of the bead on the grid.
-[y : Number] = zero-based y-position (row) of the bead on the grid.
-[data : *] = The JavaScript value previously associated with bead(x, y) using PS.data(); default = 0.
-[options : Object] = A JavaScript object with optional data properties; see API documentation for details.
-*/
+
 
 PS.enter = function( x, y, data, options ) {
     // Uncomment the following code line to inspect x/y parameters:
@@ -189,15 +137,7 @@ PS.enter = function( x, y, data, options ) {
     // Add code here for when the mouse cursor/touch enters a bead.
 };
 
-/*
-PS.exit ( x, y, data, options )
-Called when the mouse cursor/touch exits bead(x, y).
-This function doesn't have to do anything. Any value returned is ignored.
-[x : Number] = zero-based x-position (column) of the bead on the grid.
-[y : Number] = zero-based y-position (row) of the bead on the grid.
-[data : *] = The JavaScript value previously associated with bead(x, y) using PS.data(); default = 0.
-[options : Object] = A JavaScript object with optional data properties; see API documentation for details.
-*/
+
 
 PS.exit = function( x, y, data, options ) {
     // Uncomment the following code line to inspect x/y parameters:
@@ -207,12 +147,7 @@ PS.exit = function( x, y, data, options ) {
     // Add code here for when the mouse cursor/touch exits a bead.
 };
 
-/*
-PS.exitGrid ( options )
-Called when the mouse cursor/touch exits the grid perimeter.
-This function doesn't have to do anything. Any value returned is ignored.
-[options : Object] = A JavaScript object with optional data properties; see API documentation for details.
-*/
+
 
 PS.exitGrid = function( options ) {
     // Uncomment the following code line to verify operation:
@@ -222,16 +157,6 @@ PS.exitGrid = function( options ) {
     // Add code here for when the mouse cursor/touch moves off the grid.
 };
 
-/*
-PS.keyDown ( key, shift, ctrl, options )
-Called when a key on the keyboard is pressed.
-This function doesn't have to do anything. Any value returned is ignored.
-[key : Number] = ASCII code of the released key, or one of the PS.KEY_* constants documented in the API.
-[shift : Boolean] = true if shift key is held down, else false.
-[ctrl : Boolean] = true if control key is held down, else false.
-[options : Object] = A JavaScript object with optional data properties; see API documentation for details.
-*/
-
 PS.keyDown = function( key, shift, ctrl, options ) {
     // Uncomment the following code line to inspect first three parameters:
 
@@ -240,15 +165,6 @@ PS.keyDown = function( key, shift, ctrl, options ) {
     // Add code here for when a key is pressed.
 };
 
-/*
-PS.keyUp ( key, shift, ctrl, options )
-Called when a key on the keyboard is released.
-This function doesn't have to do anything. Any value returned is ignored.
-[key : Number] = ASCII code of the released key, or one of the PS.KEY_* constants documented in the API.
-[shift : Boolean] = true if shift key is held down, else false.
-[ctrl : Boolean] = true if control key is held down, else false.
-[options : Object] = A JavaScript object with optional data properties; see API documentation for details.
-*/
 
 PS.keyUp = function( key, shift, ctrl, options ) {
     // Uncomment the following code line to inspect first three parameters:
@@ -258,14 +174,6 @@ PS.keyUp = function( key, shift, ctrl, options ) {
     // Add code here for when a key is released.
 };
 
-/*
-PS.input ( sensors, options )
-Called when a supported input device event (other than those above) is detected.
-This function doesn't have to do anything. Any value returned is ignored.
-[sensors : Object] = A JavaScript object with properties indicating sensor status; see API documentation for details.
-[options : Object] = A JavaScript object with optional data properties; see API documentation for details.
-NOTE: Currently, only mouse wheel events are reported, and only when the mouse cursor is positioned directly over the grid.
-*/
 
 PS.input = function( sensors, options ) {
     // Uncomment the following code lines to inspect first parameter:
