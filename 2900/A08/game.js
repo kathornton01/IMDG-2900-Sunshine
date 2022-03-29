@@ -41,8 +41,8 @@ If you don't use JSHint (or are using it with a configuration file), you can saf
 let num;
 let PINK = PS.makeRGB( 247, 181, 230); //old color: 252, 217, 207);
 let PURPLE = PS.makeRGB(218, 189, 246);
-let RED = PS.makeRGB(254, 111, 94);
-let YELLOW = PS.makeRGB(253, 253, 125);
+let RED = PS.makeRGB(255, 125, 94);
+let YELLOW = PS.makeRGB(253, 249, 140);
 let BLUE = PS.makeRGB(168, 222, 250);
 let GREEN = PS.makeRGB(168, 250, 214);
 let ORANGE = PS.makeRGB(255, 179, 140);
