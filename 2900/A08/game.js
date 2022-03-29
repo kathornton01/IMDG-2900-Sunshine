@@ -125,6 +125,11 @@ PS.touch = function( x, y, data, options ) {
         PS.audioPlay("fx_bloink");
     }
     else {
+        PS.fade( x, y, 60 );
+
+        // additional init code goes here
+// onEnd function for end-of-fade report
+
         PS.color(x, y, background);
         let xNum = Math.floor((Math.random() * size) );
         let yNum = Math.floor((Math.random() * size) );
@@ -146,6 +151,7 @@ PS.touch = function( x, y, data, options ) {
     }
 
 };
+
 
 /*
 PS.release ( x, y, data, options )
