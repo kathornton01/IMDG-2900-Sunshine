@@ -125,7 +125,7 @@ PS.touch = function( x, y, data, options ) {
         PS.audioPlay("fx_bloink");
     }
     else {
-        PS.fade( x, y, 60 );
+        PS.fade( x, y, 30 );
 
         // additional init code goes here
 // onEnd function for end-of-fade report
