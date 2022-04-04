@@ -48,25 +48,26 @@ let GREEN = PS.makeRGB(168, 250, 214);
 let ORANGE = PS.makeRGB(255, 179, 140);
 let BACKGROUND_PINK = PS.makeRGB(254, 238, 234);
 let background = BACKGROUND_PINK;
-let colors = [RED, PINK, PURPLE, YELLOW, BLUE, GREEN, ORANGE]
+let colors = [PURPLE, GREEN, PINK, BLUE, YELLOW, RED, ORANGE]
+
 
 let status;
 let currColor;
 let canDraw;
 let levelNum;
+let answers;
+let gridNum;
+let locations;
 
 "use strict"; // Do NOT remove this directive!
 
 
 
 PS.init = function( system, options ) {
-    currColor = PS.COLOR_WHITE;
+    currColor = background;
     status = "SELECT";
     canDraw = false;
-    //levelChooser();
-    levelNum = 0;
-    levelNum = 1;
-    levelMaker(2, 5, [1,1, 1,5, 5,1, 5,5]);
+    levelChooser();
 
 	// PS.statusText( "Game" );
 
@@ -75,29 +76,39 @@ PS.init = function( system, options ) {
 
 
 PS.touch = function( x, y, data, options ) {
-    levelNum = (PS.glyph(x,y) - 48);
-    // if (levelNum == 1) {
-    //     levelMaker(2, 5, [0,0,10,10]);
-    // PS.statusText( "Level One" );
-    // }
+
+    if (status === "SELECT") {
+        levelNum = (PS.glyph(x, y) - 48);
+        if (levelNum === 1) {
+            answers = 4;
+            gridNum = 6;
+            //original coords: locations = (0,0, 4,0, 0,1, 2,3, 2,2, 3,3, 1,3, 3,4)
+            locations = [1, 1, 13, 1, 1, 4, 7, 10, 7, 7, 10, 10, 4, 10, 10, 13];
+            PS.statusText("Level One");
+        }
+        levelMaker(answers, gridNum, locations);
+    }
+
     if (status === "GAME") {
-        if (PS.color(x, y) === PS.COLOR_WHITE) {
+        if (PS.color(x, y) === background) {
 
         }
         else if (PS.color(x, y) === PS.COLOR_BLACK) {
-
+           if (PS.glyph(x,y) === 0x00002716) {
+               levelMaker(answers, gridNum, locations);
+           }
         }
         else {
             setCurrColor(PS.color(x, y));
             canDraw = true;
         }
+
     }
 
 
 	// Uncomment the following code line
 	// to inspect x/y parameters:
 
-	// PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
 
 	// Add code here for mouse clicks/touches
 	// over a bead.
@@ -107,14 +118,14 @@ PS.touch = function( x, y, data, options ) {
 
 PS.release = function( x, y, data, options ) {
     canDraw = false;
-//    checkSolution(levelNum);
+    //checkSolution(levelNum, gridNum);
 };
 
 
 
 PS.enter = function( x, y, data, options ) {
     if (status === "GAME" && canDraw) {
-        if (PS.color(x, y) === PS.COLOR_WHITE) {
+        if (PS.color(x, y) === background) {
             PS.color(x,y, currColor);
         }
     }
@@ -174,65 +185,71 @@ PS.input = function( sensors, options ) {
 
 function levelChooser() {
     PS.gridSize( 5, 5)
+    PS.color(PS.ALL, PS.ALL, background);
     PS.color(0, 0, RED)
     PS.color(2, 0, RED)
     PS.color(4, 0, RED)
-    PS.color(0, 2, RED)
-    PS.color(2, 2, RED)
-    PS.color(4, 2, RED)
-    PS.color(0, 4, RED)
-    PS.color(2, 4, RED)
-    PS.color(4, 4, RED)
+    // PS.color(0, 2, RED)
+    // PS.color(2, 2, RED)
+    // PS.color(4, 2, RED)
+    // PS.color(0, 4, RED)
+    // PS.color(2, 4, RED)
+    // PS.color(4, 4, RED)
 
     PS.glyph(0, 0, "1")
     PS.glyph(2, 0, "2")
     PS.glyph(4, 0, "3")
-    PS.glyph(0, 2, "4")
-    PS.glyph(2, 2, "5")
-    PS.glyph(4, 2, "6")
-    PS.glyph(0, 4, "7")
-    PS.glyph(2, 4, "8")
-    PS.glyph(4, 4, "9")
+    // PS.glyph(0, 2, "4")
+    // PS.glyph(2, 2, "5")
+    // PS.glyph(4, 2, "6")
+    // PS.glyph(0, 4, "7")
+    // PS.glyph(2, 4, "8")
+    // PS.glyph(4, 4, "9")
 }
 
 function levelMaker ( answerNum, gridNum, locations ) {
 
     status = "GAME";
     let j = 0;
-    PS.statusText( "LevelMaker Called" );
-    let trueGrid = gridNum * 3 + 2;
-    PS.gridSize( trueGrid, trueGrid);
-
-
+    let trueGrid = gridNum * 3;
+    PS.gridSize( trueGrid - 1, trueGrid);
+    PS.color(PS.ALL, PS.ALL, background);
     //Make answers
     for (let i = 0; i < answerNum; i++) {
-        PS.applyRect( locations[j], locations[j+1], 3, 3, PS.color, colors[i] );
-        PS.applyRect( locations[j+2], locations[j+3], 3, 3, PS.color, colors[i] );
+        PS.applyRect(locations[j], locations[j+1], 3, 3, PS.color, colors[i] );
+        PS.applyRect(locations[j+2], locations[j+3], 3, 3, PS.color, colors[i] );
         j += 4;
     }
+
     //Make black border
     PS.applyRect(0, 0, trueGrid, 1, PS.color, PS.COLOR_BLACK)
     PS.applyRect(0, trueGrid - 2, trueGrid, 2, PS.color, PS.COLOR_BLACK)
-    PS.applyRect(0, 0, 1, trueGrid, PS.color, PS.COLOR_BLACK)
-    PS.applyRect(trueGrid - 1, 0, 1, trueGrid, PS.color, PS.COLOR_BLACK)
+
+    PS.applyRect(0, 0, 1, trueGrid , PS.color, PS.COLOR_BLACK)
+    PS.applyRect(trueGrid - 2, 0, 1, trueGrid, PS.color, PS.COLOR_BLACK)
 
     //Make bottom glyphs
-    PS.glyphColor(PS.ALL, PS.ALL, PS.COLOR_WHITE);
+    PS.glyphColor(PS.ALL, PS.ALL, background);
     PS.glyph(0, trueGrid-1, 0x00002716);
+    //timer?
+    //erase
 
     PS.borderColor(PS.ALL, PS.ALL, PS.COLOR_BLACK);
 
-
 };
 
-// function checkSolution(level) {
-//     if (level === 1) {
-//         for (let i = 0; i < ; i++) {
-//             PS.applyRect( locations[j], locations[j+1], 3, 3, PS.color, colors[i] );
-//             PS.applyRect( locations[j+2], locations[j+3], 3, 3, PS.color, colors[i] );
-//             j += 4;
-//         }    }
-// }
+function checkSolution(level, grid) {
+    // let allWhiteSpaces = false;
+    // if (level === 1) {
+    //     if (PS.color())
+    //     for (let i = 0; i < grid; i++) {
+    //         for (let j = 0; j < grid; j++) {
+    //
+    //         }
+    //
+    //     }
+    // }
+}
 
 function setCurrColor(color) {
     currColor = color;
