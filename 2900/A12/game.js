@@ -53,6 +53,7 @@ let colors = [RED, PINK, PURPLE, YELLOW, BLUE, GREEN, ORANGE]
 let status;
 let currColor;
 let canDraw;
+let levelNum;
 
 "use strict"; // Do NOT remove this directive!
 
@@ -63,9 +64,9 @@ PS.init = function( system, options ) {
     status = "SELECT";
     canDraw = false;
     //levelChooser();
-    PS.border(PS.ALL, PS.ALL, PS.COLOR_BLACK)
-    levelMaker(2, 5, [0,0,10,10, 0,10, 10,0]);
-    PS.border(PS.ALL, PS.ALL, PS.COLOR_BLACK);
+    levelNum = 0;
+    levelNum = 1;
+    levelMaker(2, 5, [1,1, 1,5, 5,1, 5,5]);
 
 	// PS.statusText( "Game" );
 
@@ -74,11 +75,16 @@ PS.init = function( system, options ) {
 
 
 PS.touch = function( x, y, data, options ) {
-    // if (PS.statusText(PS.glyph(x,y)) == 49) {
+    levelNum = (PS.glyph(x,y) - 48);
+    // if (levelNum == 1) {
     //     levelMaker(2, 5, [0,0,10,10]);
+    // PS.statusText( "Level One" );
     // }
     if (status === "GAME") {
         if (PS.color(x, y) === PS.COLOR_WHITE) {
+
+        }
+        else if (PS.color(x, y) === PS.COLOR_BLACK) {
 
         }
         else {
@@ -101,6 +107,7 @@ PS.touch = function( x, y, data, options ) {
 
 PS.release = function( x, y, data, options ) {
     canDraw = false;
+//    checkSolution(levelNum);
 };
 
 
@@ -193,18 +200,39 @@ function levelMaker ( answerNum, gridNum, locations ) {
     status = "GAME";
     let j = 0;
     PS.statusText( "LevelMaker Called" );
-    let trueGrid = gridNum * 3;
+    let trueGrid = gridNum * 3 + 2;
     PS.gridSize( trueGrid, trueGrid);
 
+
+    //Make answers
     for (let i = 0; i < answerNum; i++) {
         PS.applyRect( locations[j], locations[j+1], 3, 3, PS.color, colors[i] );
         PS.applyRect( locations[j+2], locations[j+3], 3, 3, PS.color, colors[i] );
         j += 4;
     }
-    PS.border(PS.ALL, PS.ALL, PS.COLOR_BLACK);
+    //Make black border
+    PS.applyRect(0, 0, trueGrid, 1, PS.color, PS.COLOR_BLACK)
+    PS.applyRect(0, trueGrid - 2, trueGrid, 2, PS.color, PS.COLOR_BLACK)
+    PS.applyRect(0, 0, 1, trueGrid, PS.color, PS.COLOR_BLACK)
+    PS.applyRect(trueGrid - 1, 0, 1, trueGrid, PS.color, PS.COLOR_BLACK)
+
+    //Make bottom glyphs
+    PS.glyphColor(PS.ALL, PS.ALL, PS.COLOR_WHITE);
+    PS.glyph(0, trueGrid-1, 0x00002716);
+
+    PS.borderColor(PS.ALL, PS.ALL, PS.COLOR_BLACK);
 
 
 };
+
+// function checkSolution(level) {
+//     if (level === 1) {
+//         for (let i = 0; i < ; i++) {
+//             PS.applyRect( locations[j], locations[j+1], 3, 3, PS.color, colors[i] );
+//             PS.applyRect( locations[j+2], locations[j+3], 3, 3, PS.color, colors[i] );
+//             j += 4;
+//         }    }
+// }
 
 function setCurrColor(color) {
     currColor = color;
