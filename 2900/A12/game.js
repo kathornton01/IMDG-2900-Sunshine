@@ -50,13 +50,21 @@ let BACKGROUND_PINK = PS.makeRGB(254, 238, 234);
 let background = BACKGROUND_PINK;
 let colors = [RED, PINK, PURPLE, YELLOW, BLUE, GREEN, ORANGE]
 
+let status;
+let currColor;
+let canDraw;
+
 "use strict"; // Do NOT remove this directive!
 
 
-PS.init = function( system, options ) {
 
-    levelChooser();
-    //levelMaker(2, 10, [0,0,20,20]);
+PS.init = function( system, options ) {
+    currColor = PS.COLOR_WHITE;
+    status = "SELECT";
+    canDraw = false;
+    //levelChooser();
+    PS.border(PS.ALL, PS.ALL, PS.COLOR_BLACK)
+    levelMaker(2, 5, [0,0,10,10, 0,10, 10,0]);
     PS.border(PS.ALL, PS.ALL, PS.COLOR_BLACK);
 
 	// PS.statusText( "Game" );
@@ -66,9 +74,19 @@ PS.init = function( system, options ) {
 
 
 PS.touch = function( x, y, data, options ) {
-    if (PS.statusText(PS.glyph(x,y)) == 49) {
-        levelMaker(2, 10, [0,0,20,20]);
+    // if (PS.statusText(PS.glyph(x,y)) == 49) {
+    //     levelMaker(2, 5, [0,0,10,10]);
+    // }
+    if (status === "GAME") {
+        if (PS.color(x, y) === PS.COLOR_WHITE) {
+
+        }
+        else {
+            setCurrColor(PS.color(x, y));
+            canDraw = true;
+        }
     }
+
 
 	// Uncomment the following code line
 	// to inspect x/y parameters:
@@ -82,21 +100,17 @@ PS.touch = function( x, y, data, options ) {
 
 
 PS.release = function( x, y, data, options ) {
-	// Uncomment the following code line to inspect x/y parameters:
-
-	// PS.debug( "PS.release() @ " + x + ", " + y + "\n" );
-
-	// Add code here for when the mouse button/touch is released over a bead.
+    canDraw = false;
 };
 
 
 
 PS.enter = function( x, y, data, options ) {
-	// Uncomment the following code line to inspect x/y parameters:
-
-	// PS.debug( "PS.enter() @ " + x + ", " + y + "\n" );
-
-	// Add code here for when the mouse cursor/touch enters a bead.
+    if (status === "GAME" && canDraw) {
+        if (PS.color(x, y) === PS.COLOR_WHITE) {
+            PS.color(x,y, currColor);
+        }
+    }
 };
 
 
@@ -152,45 +166,46 @@ PS.input = function( sensors, options ) {
 };
 
 function levelChooser() {
-    PS.gridSize( 7, 7)
-    PS.color(2, 1, RED)
-    PS.color(4, 1, RED)
-    PS.color(6, 1, RED)
-    PS.color(2, 3, RED)
-    PS.color(4, 3, RED)
-    PS.color(6, 3, RED)
-    PS.color(2, 5, RED)
-    PS.color(4, 5, RED)
-    PS.color(6, 5, RED)
+    PS.gridSize( 5, 5)
+    PS.color(0, 0, RED)
+    PS.color(2, 0, RED)
+    PS.color(4, 0, RED)
+    PS.color(0, 2, RED)
+    PS.color(2, 2, RED)
+    PS.color(4, 2, RED)
+    PS.color(0, 4, RED)
+    PS.color(2, 4, RED)
+    PS.color(4, 4, RED)
 
-    PS.glyph(2, 1, "1")
-    PS.glyph(4, 1, "2")
-    PS.glyph(6, 1, "3")
-    PS.glyph(2, 3, "4")
-    PS.glyph(4, 3, "5")
-    PS.glyph(6, 3, "6")
-    PS.glyph(2, 5, "7")
-    PS.glyph(4, 5, "8")
-    PS.glyph(6, 5, "9")
+    PS.glyph(0, 0, "1")
+    PS.glyph(2, 0, "2")
+    PS.glyph(4, 0, "3")
+    PS.glyph(0, 2, "4")
+    PS.glyph(2, 2, "5")
+    PS.glyph(4, 2, "6")
+    PS.glyph(0, 4, "7")
+    PS.glyph(2, 4, "8")
+    PS.glyph(4, 4, "9")
 }
 
 function levelMaker ( answerNum, gridNum, locations ) {
+
+    status = "GAME";
     let j = 0;
     PS.statusText( "LevelMaker Called" );
     let trueGrid = gridNum * 3;
     PS.gridSize( trueGrid, trueGrid);
 
     for (let i = 0; i < answerNum; i++) {
-        for (let l = 0; l < 3; l ++) {
-            PS.color(locations[j], locations[j] + l, colors[i])
-            PS.color(locations[j] + 1, locations[j] + l, colors[i])
-            PS.color(locations[j] + 2, locations[j] + l, colors[i])
-            PS.color(locations[j + 1], locations[j + 1] + l, colors[i])
-            PS.color(locations[j + 1] + 1, locations[j + 1] + l, colors[i])
-            PS.color(locations[j + 1] + 2, locations[j + 1] + l, colors[i])
-        }
-        j += 2;
+        PS.applyRect( locations[j], locations[j+1], 3, 3, PS.color, colors[i] );
+        PS.applyRect( locations[j+2], locations[j+3], 3, 3, PS.color, colors[i] );
+        j += 4;
     }
+    PS.border(PS.ALL, PS.ALL, PS.COLOR_BLACK);
 
 
 };
+
+function setCurrColor(color) {
+    currColor = color;
+}
