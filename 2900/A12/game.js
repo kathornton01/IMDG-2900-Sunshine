@@ -36,8 +36,8 @@ If you don't use JSHint (or are using it with a configuration file), you can saf
 /* jshint browser : true, devel : true, esversion : 6, freeze : true */
 /* globals PS : true */
 
-/** SAMPLE PALETTE FROM A08, PLEASE CHANGE! JUST USING COLORS ARRAY
- *
+/**
+ * TODO: CHANGE PALETTE
  */
 let PINK = PS.makeRGB( 247, 181, 230);
 let PURPLE = PS.makeRGB(218, 189, 246);
@@ -57,6 +57,7 @@ let levelNum;
 let answers;
 let gridNum;
 let locations;
+let solved = false;
 
 "use strict"; // Do NOT remove this directive!
 
@@ -79,12 +80,18 @@ PS.init = function( system, options ) {
 PS.touch = function( x, y, data, options ) {
 
     if (status === "SELECT" && PS.color(x,y) != background) {
+        /**
+         * TODO: ADD AUDIO
+         */
         levelNum = (PS.glyph(x, y) - 48);
         getLevel(levelNum);
     }
 
     if (status === "GAME") {
         //PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
+        /**
+         * TODO: ADD AUDIO ??
+         */
         if (PS.color(x, y) === background) {
         }
         else if (PS.color(x, y) === PS.COLOR_BLACK) {
@@ -112,8 +119,20 @@ PS.touch = function( x, y, data, options ) {
 
 
 PS.release = function( x, y, data, options ) {
-    canDraw = false;
-    //checkSolution(levelNum, gridNum);
+    if (status === "GAME") {
+        /**
+         * TODO: ADD AUDIO ??
+         */
+        canDraw = false;
+        solved = checkSolution();
+    }
+    if(solved) {
+        PS.statusText("Solved! Congratulations!");
+        /**
+         * TODO: ADD AUDIO
+         */
+
+    }
 };
 
 
@@ -248,10 +267,39 @@ function levelMaker ( answerNum, gridNum, locations ) {
 };
 
 function checkSolution() {
-    if (levelNum === 2) {
+    let isSolved = false;
+    let color1 = false;
+    let color2 = false;
+    let color3 = false;
+    let color4 = false;
+    if (levelNum === 1) {
 
+        let color2 = true;
+        let color3 = true;
+        let color4 = true;
+    }
+    else if (levelNum === 2) {
+        let color1 = false;
+        let color2 = false;
+        let color3 = false;
+        let color4 = false;
+        //check color 1
+        for (let i = 4; i < 12; i++) {
+            if (PS.color(i,2) === colors[0]) {
+                color1 = true;
             }
+            else color1 = false;
+        }
 
+        //check color 2
+
+        //check color 3
+
+        //check color 4
+        isSolved = color1 //&& color2 && color3 && color4;
+    }
+    PS.debug(isSolved.toString())
+    return isSolved
 
 }
 
@@ -285,6 +333,7 @@ function getLevel() {
 }
 
 function checkCanDraw(x,y) {
+    if (levelNum === 1) {
     if (x === 1 || x === 15 || y===1 || y === 15
         || (x === 3 && y!= 8 && y!= 11 && y != 14)
         || (x=== 12 && y!= 2 && y!= 4 && y!= 5 && y!=8)
@@ -297,4 +346,21 @@ function checkCanDraw(x,y) {
         || (y === 13 && x!= 2 && x!= 5 && x!= 8 && x!= 14)) {
         canDraw = false;
     }
+    }
+
+    if (levelNum === 2) {
+        if (x === 1 || x === 15 || y===1 || y === 15
+            || (x === 3 && y!= 8 && y!= 11 && y != 14)
+            || (x=== 12 && y!= 2 && y!= 4 && y!= 5 && y!=8)
+            || (x === 13 && y!=4 && y!= 5 && y!= 8 && y!= 11 && y!= 14)
+            || (y === 3 && x!= 5 && x!= 8 && x!= 11)
+            || (y === 4 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
+            || (y === 6 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
+            || (y === 7 && x!= 2 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
+            || (y === 9 && x!= 2 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
+            || (y === 13 && x!= 2 && x!= 5 && x!= 8 && x!= 14)) {
+            canDraw = false;
+        }
+    }
+
 }
