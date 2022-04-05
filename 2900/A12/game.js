@@ -88,7 +88,7 @@ PS.touch = function( x, y, data, options ) {
     }
 
     if (status === "GAME") {
-        PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
+        //PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
         /**
          * TODO: ADD AUDIO ??
          */
@@ -227,52 +227,26 @@ function levelChooser() {
 
 function levelMaker ( answerNum, gridNum, locations ) {
     status = "GAME";
-    let j = 0;
     let trueGrid = gridNum * 3;
     let h = trueGrid;
     let w = trueGrid;
     if (levelNum === 1) {
         PS.gridSize(trueGrid - 1, 6);
-        trueGrid = 6;
-        let h = 6;
+        let h = 6-1;
         let w = trueGrid-1;
     }
     else if (levelNum === 2) {
         PS.gridSize(trueGrid - 1, trueGrid);
+        h=trueGrid;
+        w=trueGrid;
     }
     PS.gridColor(background);
     PS.color(PS.ALL, PS.ALL, background);
     PS.borderColor(PS.ALL, PS.ALL, background);
     //Make answers
-    for (let i = 0; i < answerNum; i++) {
-        PS.applyRect(locations[j], locations[j+1], 3, 3, PS.color, colors[i] );
-        PS.applyRect(locations[j+2], locations[j+3], 3, 3, PS.color, colors[i] );
-        PS.applyRect(locations[j], locations[j+1], 3, 3, PS.borderColor, colors[i] );
-        PS.applyRect(locations[j+2], locations[j+3], 3, 3, PS.borderColor, colors[i] );
-        j += 4;
-    }
+    answerSquares();
+    answerBorders(h,w, trueGrid);
 
-    //Make black border of squares
-    PS.applyRect(0, 0, trueGrid, 1, PS.color, PS.COLOR_BLACK)
-    PS.applyRect(0, trueGrid - 2, trueGrid, 2, PS.color, PS.COLOR_BLACK)
-
-    PS.applyRect(0, 0, 1, trueGrid , PS.color, PS.COLOR_BLACK)
-    PS.applyRect(trueGrid - 2, 0, 1, trueGrid, PS.color, PS.COLOR_BLACK)
-
-    //Make borders black
-    PS.applyRect(0, 0, trueGrid, 1, PS.borderColor, PS.COLOR_BLACK)
-    PS.applyRect(0, trueGrid - 2, trueGrid, 2, PS.borderColor, PS.COLOR_BLACK)
-
-    PS.applyRect(0, 0, 1, trueGrid , PS.borderColor, PS.COLOR_BLACK)
-    PS.applyRect(trueGrid - 2, 0, 1, trueGrid, PS.borderColor, PS.COLOR_BLACK)
-
-    //Make bottom glyphs
-    PS.glyphColor(PS.ALL, PS.ALL, background);
-    //ERASE GLYPH
-    PS.glyph(0, trueGrid-1, 0x00002716);
-    //BACK GLYPH
-    PS.glyph(0, 0, 0x00002190);
-    //timer?
 
 
 };
@@ -284,7 +258,9 @@ function checkSolution() {
     let color3 = false;
     let color4 = false;
     if (levelNum === 1) {
-
+        if (PS.color(4,2) === colors[0] && PS.color (5,2) === colors[0] && PS.color(6,2) === colors[0]) {
+            color1 = true;
+        }
         color2 = true;
         color3 = true;
         color4 = true;
@@ -350,8 +326,8 @@ function checkSolution() {
         }
         else color4 = false;
 
-        isSolved = color1 && color2 && color3 && color4;
     }
+    isSolved = color1 && color2 && color3 && color4;
     return isSolved;
 
 }
@@ -366,14 +342,20 @@ function getLevel() {
         gridNum = 4;
         //original coords: locations = (0,0, 0, 2)
         locations = [1, 1, 7, 1];
-        PS.statusText("Level One");
+        /**
+         * TODO: Change status text ??
+         */
+        PS.statusText("Level One: Connect the Colors");
     }
     if (levelNum === 2) {
         answers = 4;
         gridNum = 6;
         //original coords: locations = (0,0, 4,0, 0,1, 2,3, 2,2, 3,3, 1,3, 3,4)
         locations = [1, 1, 13, 1, 1, 4, 7, 10, 7, 7, 10, 10, 4, 10, 10, 13];
-        PS.statusText("Level Two");
+        /**
+         * TODO: Change status text:
+         */
+        PS.statusText("Level Two: Connect Without Overlapping");
     }
     if (levelNum === 3) {
         answers = 4;
@@ -387,9 +369,9 @@ function getLevel() {
 
 function checkCanDraw(x,y) {
     if (levelNum === 1) {
-    // if (x === 1 || x === 15 || y===1 || y === 15 {
-    //     canDraw = false;
-    // }
+    if (y === 1 || y === 3) {
+        canDraw = false;
+    }
     }
 
     if (levelNum === 2) {
@@ -408,3 +390,78 @@ function checkCanDraw(x,y) {
     }
 
 }
+
+function answerSquares() {
+    let j = 0;
+    if (levelNum === 1) {
+        for (let i = 0; i < answers; i++) {
+            PS.applyRect(locations[j], locations[j + 1], 3, 3, PS.color, colors[i]);
+            PS.applyRect(locations[j + 2], locations[j + 3], 3, 3, PS.color, colors[i]);
+            PS.applyRect(locations[j], locations[j + 1], 3, 3, PS.borderColor, colors[i]);
+            PS.applyRect(locations[j + 2], locations[j + 3], 3, 3, PS.borderColor, colors[i]);
+            j += 4;
+        }
+    }
+    else if (levelNum === 2) {
+        for (let i = 0; i < answers; i++) {
+            PS.applyRect(locations[j], locations[j + 1], 3, 3, PS.color, colors[i]);
+            PS.applyRect(locations[j + 2], locations[j + 3], 3, 3, PS.color, colors[i]);
+            PS.applyRect(locations[j], locations[j + 1], 3, 3, PS.borderColor, colors[i]);
+            PS.applyRect(locations[j + 2], locations[j + 3], 3, 3, PS.borderColor, colors[i]);
+            j += 4;
+        }
+    }
+}
+
+function answerBorders(h,w,trueGrid) {
+    if (levelNum === 1) {
+        //Make black border of squares
+        PS.applyRect(0, 0, trueGrid, 1, PS.color, PS.COLOR_BLACK)
+        PS.applyRect(0, 4, trueGrid, 2, PS.color, PS.COLOR_BLACK)
+
+        PS.applyRect(0, 0, 1, trueGrid , PS.color, PS.COLOR_BLACK)
+        PS.applyRect(trueGrid - 2, 0, 1, h, PS.color, PS.COLOR_BLACK)
+
+        //Make borders black
+        PS.applyRect(0, 0, trueGrid, 1, PS.borderColor, PS.COLOR_BLACK)
+        PS.applyRect(0, 4, trueGrid, 2, PS.borderColor, PS.COLOR_BLACK)
+
+        PS.applyRect(0, 0, 1, trueGrid , PS.borderColor, PS.COLOR_BLACK)
+        PS.applyRect(trueGrid - 2, 0, 1, h, PS.borderColor, PS.COLOR_BLACK)
+
+        //Make bottom glyphs
+        PS.glyphColor(PS.ALL, PS.ALL, background);
+        //ERASE GLYPH
+        PS.glyph(0, 5, 0x00002716);
+        //BACK GLYPH
+        PS.glyph(0, 0, 0x00002190);
+        //timer?
+
+
+    }
+    else if (levelNum === 2) {
+        //Make black border of squares
+        PS.applyRect(0, 0, trueGrid, 1, PS.color, PS.COLOR_BLACK)
+        PS.applyRect(0, trueGrid - 2, trueGrid, 2, PS.color, PS.COLOR_BLACK)
+
+        PS.applyRect(0, 0, 1, trueGrid , PS.color, PS.COLOR_BLACK)
+        PS.applyRect(trueGrid - 2, 0, 1, trueGrid, PS.color, PS.COLOR_BLACK)
+
+        //Make borders black
+        PS.applyRect(0, 0, trueGrid, 1, PS.borderColor, PS.COLOR_BLACK)
+        PS.applyRect(0, trueGrid - 2, trueGrid, 2, PS.borderColor, PS.COLOR_BLACK)
+
+        PS.applyRect(0, 0, 1, trueGrid , PS.borderColor, PS.COLOR_BLACK)
+        PS.applyRect(trueGrid - 2, 0, 1, trueGrid, PS.borderColor, PS.COLOR_BLACK)
+
+        //Make bottom glyphs
+        PS.glyphColor(PS.ALL, PS.ALL, background);
+        //ERASE GLYPH
+        PS.glyph(0, h-1, 0x00002716);
+        //BACK GLYPH
+        PS.glyph(0, 0, 0x00002190);
+        //timer?
+
+        }
+
+    }
