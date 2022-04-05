@@ -68,8 +68,9 @@ PS.init = function( system, options ) {
     status = "SELECT";
     canDraw = false;
     levelChooser();
+    PS.borderColor(PS.ALL, PS.ALL, PS.background);
 
-	// PS.statusText( "Game" );
+    // PS.statusText( "Game" );
 
 	// Add any other initialization code you need here.
 };
@@ -79,32 +80,23 @@ PS.touch = function( x, y, data, options ) {
 
     if (status === "SELECT") {
         levelNum = (PS.glyph(x, y) - 48);
-        if (levelNum === 1) {
-            answers = 4;
-            gridNum = 6;
-            //original coords: locations = (0,0, 4,0, 0,1, 2,3, 2,2, 3,3, 1,3, 3,4)
-            locations = [1, 1, 13, 1, 1, 4, 7, 10, 7, 7, 10, 10, 4, 10, 10, 13];
-            PS.statusText("Level One");
-        }
-        levelMaker(answers, gridNum, locations);
+        getLevel(levelNum);
     }
 
     if (status === "GAME") {
+        PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
         if (PS.color(x, y) === background) {
-
         }
         else if (PS.color(x, y) === PS.COLOR_BLACK) {
-           if (PS.glyph(x,y) === 0x00002716) {
-               levelMaker(answers, gridNum, locations);
-           }
-        }
-        else {
+            if (PS.glyph(x, y) === 0x00002716) {
+                levelMaker(answers, gridNum, locations);
+            }
+        } else {
             setCurrColor(PS.color(x, y));
             canDraw = true;
         }
 
     }
-
 
 	// Uncomment the following code line
 	// to inspect x/y parameters:
@@ -124,8 +116,21 @@ PS.release = function( x, y, data, options ) {
 
 
 PS.enter = function( x, y, data, options ) {
+    if (x === 1 || x === 15 || y===1 || y === 15
+        || (x === 3 && y!= 8 && y!= 11 && y != 14)
+        || (x=== 12 && y!= 2 && y!= 4 && y!= 5 && y!=8)
+        || (x === 13 && y!=4 && y!= 5 && y!= 8 && y!= 11 && y!= 14)
+        || (y === 3 && x!= 5 && x!= 8 && x!= 11)
+        || (y === 4 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
+        || (y === 6 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
+        || (y === 7 && x!= 2 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
+        || (y === 9 && x!= 2 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
+        || (y === 13 && x!= 2 && x!= 5 && x!= 8 && x!= 14)) {
+        canDraw = false;
+    }
     if (status === "GAME" && canDraw) {
         if (PS.color(x, y) === background) {
+            PS.borderColor(x, y, currColor);
             PS.color(x,y, currColor);
         }
     }
@@ -184,8 +189,9 @@ PS.input = function( sensors, options ) {
 };
 
 function levelChooser() {
-    PS.gridSize( 5, 5)
+    PS.gridSize( 5, 1)
     PS.color(PS.ALL, PS.ALL, background);
+    PS.borderColor(PS.ALL, PS.ALL, background);
     PS.color(0, 0, RED)
     PS.color(2, 0, RED)
     PS.color(4, 0, RED)
@@ -214,43 +220,72 @@ function levelMaker ( answerNum, gridNum, locations ) {
     let trueGrid = gridNum * 3;
     PS.gridSize( trueGrid - 1, trueGrid);
     PS.color(PS.ALL, PS.ALL, background);
+    PS.borderColor(PS.ALL, PS.ALL, background);
     //Make answers
     for (let i = 0; i < answerNum; i++) {
         PS.applyRect(locations[j], locations[j+1], 3, 3, PS.color, colors[i] );
         PS.applyRect(locations[j+2], locations[j+3], 3, 3, PS.color, colors[i] );
+        PS.applyRect(locations[j], locations[j+1], 3, 3, PS.borderColor, colors[i] );
+        PS.applyRect(locations[j+2], locations[j+3], 3, 3, PS.borderColor, colors[i] );
         j += 4;
     }
 
-    //Make black border
+    //Make black border of squares
     PS.applyRect(0, 0, trueGrid, 1, PS.color, PS.COLOR_BLACK)
     PS.applyRect(0, trueGrid - 2, trueGrid, 2, PS.color, PS.COLOR_BLACK)
 
     PS.applyRect(0, 0, 1, trueGrid , PS.color, PS.COLOR_BLACK)
     PS.applyRect(trueGrid - 2, 0, 1, trueGrid, PS.color, PS.COLOR_BLACK)
 
+    //Make borders black
+    PS.applyRect(0, 0, trueGrid, 1, PS.borderColor, PS.COLOR_BLACK)
+    PS.applyRect(0, trueGrid - 2, trueGrid, 2, PS.borderColor, PS.COLOR_BLACK)
+
+    PS.applyRect(0, 0, 1, trueGrid , PS.borderColor, PS.COLOR_BLACK)
+    PS.applyRect(trueGrid - 2, 0, 1, trueGrid, PS.borderColor, PS.COLOR_BLACK)
+
     //Make bottom glyphs
     PS.glyphColor(PS.ALL, PS.ALL, background);
+    //ERASE GLYPH
     PS.glyph(0, trueGrid-1, 0x00002716);
     //timer?
-    //erase
 
-    PS.borderColor(PS.ALL, PS.ALL, PS.COLOR_BLACK);
 
 };
 
-function checkSolution(level, grid) {
-    // let allWhiteSpaces = false;
-    // if (level === 1) {
-    //     if (PS.color())
-    //     for (let i = 0; i < grid; i++) {
-    //         for (let j = 0; j < grid; j++) {
-    //
-    //         }
-    //
-    //     }
-    // }
+function checkSolution() {
+    if (levelNum === 1) {
+
+            }
+
+
 }
 
 function setCurrColor(color) {
     currColor = color;
+}
+
+function getLevel(num) {
+    if (levelNum === 1) {
+        answers = 4;
+        gridNum = 6;
+        //original coords: locations = (0,0, 4,0, 0,1, 2,3, 2,2, 3,3, 1,3, 3,4)
+        locations = [1, 1, 13, 1, 1, 4, 7, 10, 7, 7, 10, 10, 4, 10, 10, 13];
+        PS.statusText("Level One");
+    }
+    if (levelNum === 2) {
+        answers = 4;
+        gridNum = 6;
+        //original coords: locations = (0,0, 4,0, 0,1, 2,3, 2,2, 3,3, 1,3, 3,4)
+        locations = [1, 1, 13, 1, 1, 4, 7, 10, 7, 7, 10, 10, 4, 10, 10, 13];
+        PS.statusText("Level Two");
+    }
+    if (levelNum === 3) {
+        answers = 4;
+        gridNum = 6;
+        //original coords: locations = (0,0, 4,0, 0,1, 2,3, 2,2, 3,3, 1,3, 3,4)
+        locations = [1, 1, 13, 1, 1, 4, 7, 10, 7, 7, 10, 10, 4, 10, 10, 13];
+        PS.statusText("Level Three");
+    }
+    levelMaker(answers, gridNum, locations);
 }
