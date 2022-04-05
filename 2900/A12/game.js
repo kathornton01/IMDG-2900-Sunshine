@@ -78,11 +78,12 @@ PS.init = function( system, options ) {
 
 
 PS.touch = function( x, y, data, options ) {
-    PS.audioPlay("fx_blip");
+
     if (status === "SELECT" && PS.color(x,y) != background) {
         /**
          * TODO: ADD AUDIO
          */
+        PS.audioPlay("fx_blip");
         levelNum = (PS.glyph(x, y) - 48);
         getLevel(levelNum);
     }
