@@ -284,7 +284,7 @@ function checkSolution() {
         let color3 = false;
         let color4 = false;
         //check color 1
-        for (let i = 4; i < 12; i++) {
+        for (let i = 4; i < 13; i++) {
             if (PS.color(i,2) === colors[0]) {
                 color1 = true;
             }
@@ -292,13 +292,55 @@ function checkSolution() {
         }
 
         //check color 2
+        for (let i = 7; i < 15; i++) {
+            if (PS.color(2,i) === colors[1]) {
+                color2 = true;
+            }
+            else color2 = false;
+        }
+        for (let i = 2; i < 9; i++) {
+            if (PS.color(i,14) === colors[1] && color2) {
+                color2 = true;
+            }
+            else color2 = false;
+        }
+        if (PS.color(8,13) === colors[1] && color2) {
+            color2 = true;
+        }
+        else color2 = false;
 
         //check color 3
+        if (PS.color(10,8) === colors[2] && PS.color(11,8) === colors[2] && PS.color(11,9) === colors[2]) {
+            color3 = true;
+        }
+        else color3 = false;
 
         //check color 4
-        isSolved = color1 //&& color2 && color3 && color4;
+        for (let i = 5; i < 10; i++) {
+            if (PS.color(5,i) === colors[3]) {
+                color4 = true;
+            }
+            else color4 = false;
+        }
+        for (let i = 5; i < 15; i++) {
+            if (PS.color(i,5) === colors[3] && color4) {
+                color4 = true;
+            }
+            else color4 = false;
+        }
+        for (let i = 5; i < 15; i++) {
+            if (PS.color(14,i) === colors[3] && color4) {
+                color4 = true;
+            }
+            else color4 = false;
+        }
+        if (PS.color(13,14) === colors[3] && color4) {
+            color4 = true;
+        }
+        else color4 = false;
+
+        isSolved = color1 && color2 && color3 && color4;
     }
-    PS.debug(isSolved.toString())
     return isSolved
 
 }
