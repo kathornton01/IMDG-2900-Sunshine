@@ -78,7 +78,7 @@ PS.init = function( system, options ) {
 
 
 PS.touch = function( x, y, data, options ) {
-
+    PS.audioPlay("fx_blip");
     if (status === "SELECT" && PS.color(x,y) != background) {
         /**
          * TODO: ADD AUDIO
@@ -96,7 +96,7 @@ PS.touch = function( x, y, data, options ) {
         }
         else if (PS.color(x, y) === PS.COLOR_BLACK) {
             if (PS.glyph(x, y) === 0x00002716) {
-                levelMaker(answers, gridNum, locations);
+                getLevel();
             }
             else if (PS.glyph(x,y) === 0x00002190) {
                 PS.init();
@@ -127,8 +127,9 @@ PS.release = function( x, y, data, options ) {
         solved = checkSolution();
         if(solved) {
             PS.statusText("Solved! Congratulations!");
+            PS.audioPlay("fx_tada");
             /**
-             * TODO: ADD AUDIO
+             * TODO: ADD BETTER AUDIO
              */
 
         }
@@ -235,7 +236,7 @@ function levelMaker ( answerNum, gridNum, locations ) {
         let h = 6-1;
         let w = trueGrid-1;
     }
-    else if (levelNum === 2) {
+    else if (levelNum === 2 || levelNum === 3) {
         PS.gridSize(trueGrid - 1, trueGrid);
         h=trueGrid;
         w=trueGrid;
@@ -266,10 +267,6 @@ function checkSolution() {
         color4 = true;
     }
     else if (levelNum === 2) {
-        color1 = false;
-        color2 = false;
-        color3 = false;
-        color4 = false;
         //check color 1
         for (let i = 4; i < 13; i++) {
             if (PS.color(i,2) === colors[0]) {
@@ -327,7 +324,68 @@ function checkSolution() {
         else color4 = false;
 
     }
-    isSolved = color1 && color2 && color3 && color4;
+    else if (levelNum === 3) {
+        //Color 1
+        for (let i = 4; i < 15; i++) {
+            if (PS.color(2,i) === colors[0]) {
+                color1 = true;
+            }
+            else color1 = false;
+        }
+        for (let i = 2; i < 15; i++) {
+            if (PS.color(i,14) === colors[0] && color1) {
+                color1 = true;
+            }
+            else color1 = false;
+        }
+        //Color 2
+        for (let i = 4; i < 7; i++) {
+            if (PS.color(i,2) === colors[1]) {
+                color2 = true;
+            }
+            else color2 = false;
+        }
+        for (let i = 2; i < 10; i++) {
+            if (PS.color(5,i) === colors[1] && color2) {
+                color2 = true;
+            }
+            else color2 = false;
+        }
+        //Color 3
+        for (let i = 8; i < 12; i++) {
+            if (PS.color(i,5) === colors[2]) {
+                color3 = true;
+            }
+            else color3 = false;
+        }
+        for (let i = 5; i < 12; i++) {
+            if (PS.color(8,i) === colors[2] && color3) {
+                color3 = true;
+            }
+            else color3 = false;
+        }
+        for (let i = 8; i < 13; i++) {
+            if (PS.color(i,11) === colors[2] && color3) {
+                color3 = true;
+            }
+            else color3 = false;
+        }
+        if (PS.color(11,4) === colors[2]) {
+            color3 = true;
+        }
+        else color3 = false;
+        //Color 4
+        for (let i = 4; i < 9; i++) {
+            if (PS.color(14,i) === colors[3]) {
+                color4 = true;
+            }
+            else color4 = false;
+        }
+        if (PS.color(13,8) === colors[3]) {
+            color4 = true;
+        }
+    }
+        isSolved = color1 && color2 && color3 && color4;
     return isSolved;
 
 }
@@ -360,8 +418,8 @@ function getLevel() {
     if (levelNum === 3) {
         answers = 4;
         gridNum = 6;
-        //original coords: locations = (0,0, 4,0, 0,1, 2,3, 2,2, 3,3, 1,3, 3,4)
-        locations = [1, 1, 13, 1, 1, 4, 7, 10, 7, 7, 10, 10, 4, 10, 10, 13];
+        //original coords: locations = (0,0, 4,4, 2,0, 1,3 3,0, 4,3 ,4,0 ,3,2   0-4: 1,4,7,10,13
+        locations = [1,1, 13,13, 7,1, 4,10, 10,1, 13,10, 13,1, 10,7];
         PS.statusText("Level Three");
     }
     levelMaker(answers, gridNum, locations);
@@ -388,12 +446,27 @@ function checkCanDraw(x,y) {
             canDraw = false;
         }
     }
+    if (levelNum === 3) {
+        if (x === 1 || x === 15 || y===1 || y === 15
+            || (x === 3 && y!= 5 && y!= 8 && y!= 11 && y != 14)
+            || (x === 10 && (y===10 || y===12))
+            || (x=== 12 && y!= 2 && y!= 4 && y!= 5 && y!=8 && y!= 11 && y!= 14)
+            || (x === 13 && y!=4 && y!= 5 && y!= 8 && y!= 11 && y!= 14)
+            || (y === 3 && x!= 2 && x!= 5 && x!= 8 && x!= 11)
+            || (y === 4 && x!= 2 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
+            || (y === 6 && x!= 2 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
+            || (y === 7 && x!= 2 && x!= 2 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
+            || (y === 9 && x!= 2 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
+            || (y === 13 && x!= 2 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
+            ){
+            canDraw = false;
+        }
+    }
 
 }
 
 function answerSquares() {
     let j = 0;
-    if (levelNum === 1) {
         for (let i = 0; i < answers; i++) {
             PS.applyRect(locations[j], locations[j + 1], 3, 3, PS.color, colors[i]);
             PS.applyRect(locations[j + 2], locations[j + 3], 3, 3, PS.color, colors[i]);
@@ -401,16 +474,7 @@ function answerSquares() {
             PS.applyRect(locations[j + 2], locations[j + 3], 3, 3, PS.borderColor, colors[i]);
             j += 4;
         }
-    }
-    else if (levelNum === 2) {
-        for (let i = 0; i < answers; i++) {
-            PS.applyRect(locations[j], locations[j + 1], 3, 3, PS.color, colors[i]);
-            PS.applyRect(locations[j + 2], locations[j + 3], 3, 3, PS.color, colors[i]);
-            PS.applyRect(locations[j], locations[j + 1], 3, 3, PS.borderColor, colors[i]);
-            PS.applyRect(locations[j + 2], locations[j + 3], 3, 3, PS.borderColor, colors[i]);
-            j += 4;
-        }
-    }
+
 }
 
 function answerBorders(h,w,trueGrid) {
@@ -439,7 +503,7 @@ function answerBorders(h,w,trueGrid) {
 
 
     }
-    else if (levelNum === 2) {
+    else if (levelNum === 2 || levelNum === 3) {
         //Make black border of squares
         PS.applyRect(0, 0, trueGrid, 1, PS.color, PS.COLOR_BLACK)
         PS.applyRect(0, trueGrid - 2, trueGrid, 2, PS.color, PS.COLOR_BLACK)
