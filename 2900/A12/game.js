@@ -88,7 +88,7 @@ PS.touch = function( x, y, data, options ) {
     }
 
     if (status === "GAME") {
-        //PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
+        PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
         /**
          * TODO: ADD AUDIO ??
          */
@@ -125,14 +125,15 @@ PS.release = function( x, y, data, options ) {
          */
         canDraw = false;
         solved = checkSolution();
-    }
-    if(solved) {
-        PS.statusText("Solved! Congratulations!");
-        /**
-         * TODO: ADD AUDIO
-         */
+        if(solved) {
+            PS.statusText("Solved! Congratulations!");
+            /**
+             * TODO: ADD AUDIO
+             */
 
+        }
     }
+
 };
 
 
@@ -228,7 +229,17 @@ function levelMaker ( answerNum, gridNum, locations ) {
     status = "GAME";
     let j = 0;
     let trueGrid = gridNum * 3;
-    PS.gridSize( trueGrid - 1, trueGrid);
+    let h = trueGrid;
+    let w = trueGrid;
+    if (levelNum === 1) {
+        PS.gridSize(trueGrid - 1, 6);
+        trueGrid = 6;
+        let h = 6;
+        let w = trueGrid-1;
+    }
+    else if (levelNum === 2) {
+        PS.gridSize(trueGrid - 1, trueGrid);
+    }
     PS.gridColor(background);
     PS.color(PS.ALL, PS.ALL, background);
     PS.borderColor(PS.ALL, PS.ALL, background);
@@ -274,15 +285,15 @@ function checkSolution() {
     let color4 = false;
     if (levelNum === 1) {
 
-        let color2 = true;
-        let color3 = true;
-        let color4 = true;
+        color2 = true;
+        color3 = true;
+        color4 = true;
     }
     else if (levelNum === 2) {
-        let color1 = false;
-        let color2 = false;
-        let color3 = false;
-        let color4 = false;
+        color1 = false;
+        color2 = false;
+        color3 = false;
+        color4 = false;
         //check color 1
         for (let i = 4; i < 13; i++) {
             if (PS.color(i,2) === colors[0]) {
@@ -351,10 +362,10 @@ function setCurrColor(color) {
 
 function getLevel() {
     if (levelNum === 1) {
-        answers = 2;
-        gridNum = 5;
-        //original coords: locations = (0,0, 4,0, 0,1, 2,3, 2,2, 3,3, 1,3, 3,4)
-        locations = [1, 1, 13, 1, 1, 4, 7, 10, 7, 7, 10, 10, 4, 10, 10, 13];
+        answers = 1;
+        gridNum = 4;
+        //original coords: locations = (0,0, 0, 2)
+        locations = [1, 1, 7, 1];
         PS.statusText("Level One");
     }
     if (levelNum === 2) {
@@ -376,18 +387,9 @@ function getLevel() {
 
 function checkCanDraw(x,y) {
     if (levelNum === 1) {
-    if (x === 1 || x === 15 || y===1 || y === 15
-        || (x === 3 && y!= 8 && y!= 11 && y != 14)
-        || (x=== 12 && y!= 2 && y!= 4 && y!= 5 && y!=8)
-        || (x === 13 && y!=4 && y!= 5 && y!= 8 && y!= 11 && y!= 14)
-        || (y === 3 && x!= 5 && x!= 8 && x!= 11)
-        || (y === 4 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
-        || (y === 6 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
-        || (y === 7 && x!= 2 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
-        || (y === 9 && x!= 2 && x!= 5 && x!= 8 && x!= 11 && x!= 14)
-        || (y === 13 && x!= 2 && x!= 5 && x!= 8 && x!= 14)) {
-        canDraw = false;
-    }
+    // if (x === 1 || x === 15 || y===1 || y === 15 {
+    //     canDraw = false;
+    // }
     }
 
     if (levelNum === 2) {
