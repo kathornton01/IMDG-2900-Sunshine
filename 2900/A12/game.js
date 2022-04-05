@@ -341,7 +341,7 @@ function checkSolution() {
 
         isSolved = color1 && color2 && color3 && color4;
     }
-    return isSolved
+    return isSolved;
 
 }
 
@@ -351,8 +351,8 @@ function setCurrColor(color) {
 
 function getLevel() {
     if (levelNum === 1) {
-        answers = 4;
-        gridNum = 6;
+        answers = 2;
+        gridNum = 5;
         //original coords: locations = (0,0, 4,0, 0,1, 2,3, 2,2, 3,3, 1,3, 3,4)
         locations = [1, 1, 13, 1, 1, 4, 7, 10, 7, 7, 10, 10, 4, 10, 10, 13];
         PS.statusText("Level One");
