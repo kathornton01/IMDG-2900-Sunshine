@@ -25,6 +25,15 @@ along with the Perlenspiel devkit. If not, see <http://www.gnu.org/licenses/>.
 This JavaScript file is a template for creating new Perlenspiel 3.3.x games.
 Any unused event-handling function templates can be safely deleted.
 Refer to the tutorials and documentation at <https://ps3.perlenspiel.net> for details.
+
+SOUND CREDITS:
+    Background music credits: https://youtu.be/Y1OcV5-KVrE
+    Level completion sound effect: https://freesound.org/people/Kenneth_Cooney/sounds/609336/
+    Level selection sound effect: https://freesound.org/people/kwahmah_02/sounds/256116/
+    Back arrow selection sound effect: https://freesound.org/people/trullilulli/sounds/422641/
+    Drawing sound effect: N/A yet (undecided if it will be used)
+    Clear board sound effect: https://freesound.org/people/qubodup/sounds/60027/
+
 */
 
 /*
@@ -61,6 +70,13 @@ let solved = false;
 
 "use strict"; // Do NOT remove this directive!
 
+// Automatically load and begin to loop the background music at 50% volume
+PS.audioLoad ( "MidnightSnowfall", {
+    path : "audio/",
+    autoplay : true,
+    volume : 0.6,
+    loop : true
+} )
 
 PS.init = function( system, options ) {
     currColor = background;
@@ -74,32 +90,39 @@ PS.init = function( system, options ) {
     // PS.statusText( "Game" );
 
 	// Add any other initialization code you need here.
+
+
 };
 
 
 PS.touch = function( x, y, data, options ) {
 
     if (status === "SELECT" && PS.color(x,y) != background) {
-        /**
-         * TODO: ADD AUDIO
-         */
-        PS.audioPlay("fx_blip");
+        PS.audioPlay("levelSelection", {
+            path: "audio/",
+            volume : 0.15
+        });
         levelNum = (PS.glyph(x, y) - 48);
         getLevel(levelNum);
     }
 
     if (status === "GAME") {
         //PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
-        /**
-         * TODO: ADD AUDIO ??
-         */
         if (PS.color(x, y) === background) {
         }
         else if (PS.color(x, y) === PS.COLOR_BLACK) {
-            if (PS.glyph(x, y) === 0x00002716) {
+            if (PS.glyph(x, y) === 0x00002716) { // erase whole board
                 getLevel();
+                PS.audioPlay("clearAll", {
+                    path: "audio/",
+                    volume : 0.25
+                });
             }
-            else if (PS.glyph(x,y) === 0x00002190) {
+            else if (PS.glyph(x,y) === 0x00002190) { // return to level selection
+                PS.audioPlay("backSelection", {
+                    path: "audio/",
+                    volume : 0.25
+                });
                 PS.init();
             }
         } else {
@@ -128,10 +151,10 @@ PS.release = function( x, y, data, options ) {
         solved = checkSolution();
         if(solved) {
             PS.statusText("Solved! Congratulations!");
-            PS.audioPlay("fx_tada");
-            /**
-             * TODO: ADD BETTER AUDIO
-             */
+            PS.audioPlay("levelComplete", {
+                volume : 0.5,
+                path : "audio/"
+            });
 
         }
     }
